@@ -31,15 +31,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const providerSelect = document.getElementById('provider-select');
   const apiKeyInput = document.getElementById('api-key-input');
   const apiKeyLabel = document.getElementById('api-key-label');
-  const apiLink = document.getElementById('api-link');
   const apiHelp = document.getElementById('api-help');
   const modelSelect = document.getElementById('model-select');
   const toggleKey = document.getElementById('toggle-key');
   const saveSettingsBtn = document.getElementById('save-settings');
   const saveStatus = document.getElementById('save-status');
+  const apiKeyGroup = document.getElementById('api-key-group');
 
   let selectedMode = 'grammar';
-  let hasApiKey = false;
+
+  const openrouterModels = [
+    { value: 'meta-llama/llama-3.3-70b-instruct:free', label: 'Llama 3.3 70B (Best)' },
+    { value: 'qwen/qwen3-30b-a3b:free', label: 'Qwen 3 30B (Fast)' },
+    { value: 'google/gemma-3-27b-it:free', label: 'Gemma 3 27B' }
+  ];
 
   const groqModels = [
     { value: 'llama-3.3-70b-versatile', label: 'Llama 3.3 70B (Best)' },
@@ -61,17 +66,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Load settings
   chrome.storage.local.get(['provider', 'apiKey', 'model'], (data) => {
-    if (data.provider) providerSelect.value = data.provider;
+    const provider = data.provider || 'openrouter';
+    providerSelect.value = provider;
     if (data.apiKey) {
       apiKeyInput.value = data.apiKey;
-      hasApiKey = true;
     }
-    updateProviderUI(data.provider || 'gemini');
+    updateProviderUI(provider);
     if (data.model) modelSelect.value = data.model;
-
-    if (!hasApiKey) {
-      noKeyBanner.classList.remove('hidden');
-    }
     updateCorrectBtn();
   });
 
@@ -197,7 +198,19 @@ document.addEventListener('DOMContentLoaded', () => {
   errorToastClose.addEventListener('click', () => hideError());
 
   function updateCorrectBtn() {
-    correctBtn.disabled = !inputText.value.trim() || !hasApiKey;
+    // OpenRouter works without a key (built-in default), so only check text
+    const provider = providerSelect.value || 'openrouter';
+    const needsKey = provider !== 'openrouter';
+    const hasKey = !!apiKeyInput.value.trim();
+
+    correctBtn.disabled = !inputText.value.trim() || (needsKey && !hasKey);
+
+    // Show/hide no-key banner only for providers that need a key
+    if (needsKey && !hasKey) {
+      noKeyBanner.classList.remove('hidden');
+    } else {
+      noKeyBanner.classList.add('hidden');
+    }
   }
 
   // Copy result
@@ -228,12 +241,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Settings - Provider change
   providerSelect.addEventListener('change', () => {
     updateProviderUI(providerSelect.value);
+    updateCorrectBtn();
   });
 
   function updateProviderUI(provider) {
     modelSelect.innerHTML = '';
-    const modelsMap = { groq: groqModels, gemini: geminiModels, openai: openaiModels };
-    const models = modelsMap[provider] || groqModels;
+    const modelsMap = { openrouter: openrouterModels, groq: groqModels, gemini: geminiModels, openai: openaiModels };
+    const models = modelsMap[provider] || openrouterModels;
     models.forEach(m => {
       const opt = document.createElement('option');
       opt.value = m.value;
@@ -241,23 +255,29 @@ document.addEventListener('DOMContentLoaded', () => {
       modelSelect.appendChild(opt);
     });
 
-    const providerInfo = {
-      groq: { label: 'Groq API Key', helpText: 'Get a free key at', linkText: 'console.groq.com', url: 'https://console.groq.com/keys' },
-      gemini: { label: 'Gemini API Key', helpText: 'Get a free key at', linkText: 'aistudio.google.com', url: 'https://aistudio.google.com/app/apikey' },
-      openai: { label: 'OpenAI API Key', helpText: 'Get a key at', linkText: 'platform.openai.com', url: 'https://platform.openai.com/api-keys' }
-    };
+    // Hide API key section for default OpenRouter (built-in key)
+    if (provider === 'openrouter') {
+      apiKeyGroup.classList.add('hidden');
+    } else {
+      apiKeyGroup.classList.remove('hidden');
 
-    const info = providerInfo[provider] || providerInfo.groq;
-    apiKeyLabel.textContent = info.label;
-    apiHelp.innerHTML = `${info.helpText} <a href="#" id="api-link-inner">${info.linkText}</a>`;
+      const providerInfo = {
+        groq: { label: 'Groq API Key', helpText: 'Get a free key at', linkText: 'console.groq.com', url: 'https://console.groq.com/keys' },
+        gemini: { label: 'Gemini API Key', helpText: 'Get a free key at', linkText: 'aistudio.google.com', url: 'https://aistudio.google.com/app/apikey' },
+        openai: { label: 'OpenAI API Key', helpText: 'Get a key at', linkText: 'platform.openai.com', url: 'https://platform.openai.com/api-keys' }
+      };
 
-    // Open links in new tab
-    const innerLink = document.getElementById('api-link-inner');
-    if (innerLink) {
-      innerLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        chrome.tabs.create({ url: info.url });
-      });
+      const info = providerInfo[provider] || providerInfo.groq;
+      apiKeyLabel.textContent = info.label;
+      apiHelp.innerHTML = `${info.helpText} <a href="#" id="api-link-inner">${info.linkText}</a>`;
+
+      const innerLink = document.getElementById('api-link-inner');
+      if (innerLink) {
+        innerLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          chrome.tabs.create({ url: info.url });
+        });
+      }
     }
   }
 
@@ -272,13 +292,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const apiKey = apiKeyInput.value.trim();
     const model = modelSelect.value;
 
-    if (!apiKey) {
+    // OpenRouter doesn't need a key
+    if (provider !== 'openrouter' && !apiKey) {
       showSaveStatus('Please enter an API key.', 'error');
       return;
     }
 
     chrome.storage.local.set({ provider, apiKey, model }, () => {
-      hasApiKey = true;
       noKeyBanner.classList.add('hidden');
       showSaveStatus('Settings saved!', 'success');
       updateCorrectBtn();

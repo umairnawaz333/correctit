@@ -168,14 +168,15 @@
       <div class="form-group">
         <label>AI Provider</label>
         <select id="provider-select">
-          <option value="groq">Groq (Free &amp; Fast)</option>
+          <option value="openrouter">Default (Free — No key needed)</option>
+          <option value="groq">Groq (Own API key)</option>
           <!-- <option value="gemini">Google Gemini</option> -->
           <!-- <option value="openai">OpenAI</option> -->
         </select>
       </div>
 
-      <div class="form-group">
-        <label id="api-key-label">Gemini API Key</label>
+      <div class="form-group hidden" id="api-key-group">
+        <label id="api-key-label">API Key</label>
         <div class="key-input-wrap">
           <input type="password" id="api-key-input" placeholder="Enter your API key...">
           <button id="toggle-key" class="icon-btn small" title="Show/hide key">
@@ -193,9 +194,9 @@
       <div class="form-group">
         <label>Model</label>
         <select id="model-select">
-          <option value="llama-3.3-70b-versatile">Llama 3.3 70B (Best)</option>
-          <option value="llama-3.1-8b-instant">Llama 3.1 8B (Fastest)</option>
-          <option value="mixtral-8x7b-32768">Mixtral 8x7B</option>
+          <option value="meta-llama/llama-3.3-70b-instruct:free">Llama 3.3 70B (Best)</option>
+          <option value="qwen/qwen3-30b-a3b:free">Qwen 3 30B (Fast)</option>
+          <option value="google/gemma-3-27b-it:free">Gemma 3 27B</option>
         </select>
       </div>
 

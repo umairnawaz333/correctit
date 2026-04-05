@@ -109,23 +109,35 @@ function buildPrompt(text, mode, extra) {
   return `${instruction}\n\nReturn ONLY the modified text, nothing else.\n\nText: "${text}"`;
 }
 
+// Built-in OpenRouter key for default free usage
+const OPENROUTER_DEFAULT_KEY = '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';
+
 // Process text with AI
 async function processText(text, mode, extra) {
   const data = await chrome.storage.local.get(['provider', 'apiKey', 'model']);
 
-  if (!data.apiKey) {
-    throw new Error('No API key configured. Open CorrectIt settings to add your key.');
-  }
-
-  const provider = data.provider || 'groq';
+  const provider = data.provider || 'openrouter';
   const prompt = buildPrompt(text, mode, extra || '');
 
   if (provider === 'groq') {
+    if (!data.apiKey) {
+      throw new Error('No Groq API key configured. Add your key in Settings, or switch to the default provider.');
+    }
     return await callGroq(data.apiKey, data.model || 'llama-3.3-70b-versatile', prompt);
   } else if (provider === 'gemini') {
+    if (!data.apiKey) {
+      throw new Error('No Gemini API key configured. Add your key in Settings, or switch to the default provider.');
+    }
     return await callGemini(data.apiKey, data.model || 'gemini-2.0-flash', prompt);
-  } else {
+  } else if (provider === 'openai') {
+    if (!data.apiKey) {
+      throw new Error('No OpenAI API key configured. Add your key in Settings, or switch to the default provider.');
+    }
     return await callOpenAI(data.apiKey, data.model || 'gpt-4o-mini', prompt);
+  } else {
+    // OpenRouter — use built-in key if user hasn't set their own
+    const key = data.apiKey || OPENROUTER_DEFAULT_KEY;
+    return await callOpenRouter(key, data.model || 'meta-llama/llama-3.3-70b-instruct:free', prompt);
   }
 }
 
@@ -295,4 +307,44 @@ async function callGroq(apiKey, model, prompt) {
   if (!groqText) throw new Error('No response received. Please try again.');
 
   return groqText.replace(/^["']|["']$/g, '').trim();
+}
+
+// OpenRouter API (OpenAI-compatible, free models)
+async function callOpenRouter(apiKey, model, prompt) {
+  let response;
+  try {
+    response = await fetchWithTimeout('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+        'HTTP-Referer': 'https://github.com/umairnawaz333/correctit',
+        'X-Title': 'CorrectIt'
+      },
+      body: JSON.stringify({
+        model,
+        messages: [
+          { role: 'system', content: 'You are a text correction assistant. Return only the corrected/modified text with no explanations, labels, or quotes.' },
+          { role: 'user', content: prompt }
+        ],
+        temperature: 0.3,
+        max_tokens: 2048
+      })
+    });
+  } catch (err) {
+    throw new Error(friendlyError(err.message, 0, 'openrouter'));
+  }
+
+  if (!response.ok) {
+    const errBody = await safeJson(response);
+    throw new Error(friendlyError(errBody?.error?.message, response.status, 'openrouter'));
+  }
+
+  const result = await safeJson(response);
+  if (!result) throw new Error('Invalid response. Please try again.');
+
+  const orText = result.choices?.[0]?.message?.content;
+  if (!orText) throw new Error('No response received. Please try again.');
+
+  return orText.replace(/^["']|["']$/g, '').trim();
 }
