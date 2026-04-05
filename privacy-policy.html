@@ -57,34 +57,35 @@
 
     <h2>How Your Data Is Used</h2>
     <ul>
-      <li><strong>Text you correct:</strong> When you use CorrectIt, the text you select or type is sent directly from your browser to the AI provider you have configured (Google Gemini or OpenAI). This communication happens directly between your browser and the provider's API — we never see or store this data.</li>
-      <li><strong>API Key:</strong> Your API key is stored locally in your browser using Chrome's storage API. It is never transmitted to anyone other than the AI provider you configured.</li>
+      <li><strong>Text you correct:</strong> When you use CorrectIt, the text you select or type is sent directly from your browser to the AI provider for processing. By default, the extension uses OpenRouter to access free AI models. This communication happens directly between your browser and the provider's API — we never see or store this data.</li>
+      <li><strong>API Key (optional):</strong> If you choose to use your own API key (e.g. Groq), it is stored locally in your browser using Chrome's storage API. It is never transmitted to anyone other than the AI provider you configured.</li>
       <li><strong>Settings:</strong> Your preferences (provider, model selection) are stored locally in your browser and are never transmitted externally.</li>
     </ul>
 
     <h2>Third-Party Services</h2>
-    <p>CorrectIt communicates with third-party AI providers based on your configuration:</p>
+    <p>CorrectIt communicates with third-party AI providers to process text corrections:</p>
     <ul>
-      <li><strong>Google Gemini API</strong> — subject to <a href="https://ai.google.dev/terms" target="_blank">Google's API Terms of Service</a></li>
-      <li><strong>OpenAI API</strong> — subject to <a href="https://openai.com/policies/terms-of-use" target="_blank">OpenAI's Terms of Use</a></li>
+      <li><strong>OpenRouter</strong> (default) — routes requests to free AI models. Subject to <a href="https://openrouter.ai/terms" target="_blank">OpenRouter's Terms of Service</a></li>
+      <li><strong>Groq API</strong> (optional) — subject to <a href="https://groq.com/terms-of-use/" target="_blank">Groq's Terms of Use</a></li>
     </ul>
     <p>Please review the respective privacy policies of these providers to understand how they handle data sent via their APIs.</p>
 
     <h2>Permissions</h2>
     <ul>
       <li><strong>activeTab:</strong> Used to access the currently active tab so the extension can read selected text and replace it with corrected text.</li>
-      <li><strong>storage:</strong> Used to save your API key and preferences locally in your browser.</li>
+      <li><strong>storage:</strong> Used to save user preferences locally in your browser.</li>
       <li><strong>contextMenus:</strong> Used to add right-click menu options for quick text correction.</li>
+      <li><strong>Content script (all URLs):</strong> Required to display the floating correction toolbar when you select text on any webpage.</li>
     </ul>
 
     <h2>Data Security</h2>
-    <p>All data stays in your browser. Your API key is stored using Chrome's built-in storage API, which is sandboxed to the extension.</p>
+    <p>All data stays in your browser. Any optional API keys are stored using Chrome's built-in storage API, which is sandboxed to the extension. No data is sent to any server owned or operated by CorrectIt.</p>
 
     <h2>Changes to This Policy</h2>
     <p>We may update this privacy policy from time to time. Any changes will be reflected in the "Last updated" date above.</p>
 
     <h2>Contact</h2>
-    <p>If you have questions about this privacy policy, please open an issue on our GitHub repository.</p>
+    <p>If you have questions about this privacy policy, please open an issue on our <a href="https://github.com/umairnawaz333/correctit" target="_blank">GitHub repository</a>.</p>
   </div>
 </body>
 </html>
