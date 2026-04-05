@@ -316,9 +316,7 @@ async function callOpenRouter(apiKey, model, prompt) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-        'HTTP-Referer': 'https://github.com/umairnawaz333/correctit',
-        'X-Title': 'CorrectIt'
+        'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
         model,
