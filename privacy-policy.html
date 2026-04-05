@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CorrectIt - Privacy Policy</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f0f1a;
+      color: #e8e8f0;
+      line-height: 1.7;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+      color: #6C63FF;
+    }
+    .updated {
+      font-size: 13px;
+      color: #6b6b85;
+      margin-bottom: 32px;
+    }
+    h2 {
+      font-size: 18px;
+      margin: 28px 0 12px;
+      color: #a0a0b8;
+    }
+    p, li {
+      font-size: 14px;
+      color: #c0c0d0;
+      margin-bottom: 12px;
+    }
+    ul {
+      padding-left: 24px;
+      margin-bottom: 12px;
+    }
+    a { color: #6C63FF; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>CorrectIt - Privacy Policy</h1>
+    <p class="updated">Last updated: April 5, 2026</p>
+
+    <h2>Overview</h2>
+    <p>CorrectIt is a Chrome extension that helps users correct and improve their text using AI. We are committed to protecting your privacy and being transparent about how your data is handled.</p>
+
+    <h2>Data Collection</h2>
+    <p>CorrectIt does <strong>not</strong> collect, store, or transmit any personal data to our servers. We do not have servers — the extension runs entirely in your browser.</p>
+
+    <h2>How Your Data Is Used</h2>
+    <ul>
+      <li><strong>Text you correct:</strong> When you use CorrectIt, the text you select or type is sent directly from your browser to the AI provider you have configured (Google Gemini or OpenAI). This communication happens directly between your browser and the provider's API — we never see or store this data.</li>
+      <li><strong>API Key:</strong> Your API key is stored locally in your browser using Chrome's storage API. It is never transmitted to anyone other than the AI provider you configured.</li>
+      <li><strong>Settings:</strong> Your preferences (provider, model selection) are stored locally in your browser and are never transmitted externally.</li>
+    </ul>
+
+    <h2>Third-Party Services</h2>
+    <p>CorrectIt communicates with third-party AI providers based on your configuration:</p>
+    <ul>
+      <li><strong>Google Gemini API</strong> — subject to <a href="https://ai.google.dev/terms" target="_blank">Google's API Terms of Service</a></li>
+      <li><strong>OpenAI API</strong> — subject to <a href="https://openai.com/policies/terms-of-use" target="_blank">OpenAI's Terms of Use</a></li>
+    </ul>
+    <p>Please review the respective privacy policies of these providers to understand how they handle data sent via their APIs.</p>
+
+    <h2>Permissions</h2>
+    <ul>
+      <li><strong>activeTab:</strong> Used to access the currently active tab so the extension can read selected text and replace it with corrected text.</li>
+      <li><strong>storage:</strong> Used to save your API key and preferences locally in your browser.</li>
+      <li><strong>contextMenus:</strong> Used to add right-click menu options for quick text correction.</li>
+    </ul>
+
+    <h2>Data Security</h2>
+    <p>All data stays in your browser. Your API key is stored using Chrome's built-in storage API, which is sandboxed to the extension.</p>
+
+    <h2>Changes to This Policy</h2>
+    <p>We may update this privacy policy from time to time. Any changes will be reflected in the "Last updated" date above.</p>
+
+    <h2>Contact</h2>
+    <p>If you have questions about this privacy policy, please open an issue on our GitHub repository.</p>
+  </div>
+</body>
+</html>

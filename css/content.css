@@ -1,0 +1,219 @@
+/* CorrectIt - Floating Toolbar */
+.correctit-toolbar {
+  position: absolute;
+  z-index: 2147483647;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 4px 6px;
+  background: #1a1a2e;
+  border: 1px solid #33334d;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(108, 99, 255, 0.15);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  animation: correctit-fade-in 0.15s ease;
+}
+
+.correctit-tb-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.correctit-tb-input-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 2px 2px;
+  border-top: 1px solid #2a2a45;
+  margin-top: 2px;
+}
+
+.correctit-custom-input {
+  flex: 1;
+  min-width: 180px;
+  padding: 5px 8px;
+  background: #2a2a45;
+  border: 1px solid #33334d;
+  border-radius: 6px;
+  color: #e8e8f0;
+  font-family: inherit;
+  font-size: 11px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.correctit-custom-input:focus {
+  border-color: #6C63FF;
+}
+
+.correctit-custom-input::placeholder {
+  color: #6b6b85;
+}
+
+.correctit-send-btn {
+  color: #6C63FF !important;
+  padding: 5px 6px !important;
+}
+
+.correctit-send-btn:hover {
+  background: rgba(108, 99, 255, 0.2) !important;
+}
+
+@keyframes correctit-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.correctit-tb-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  background: transparent;
+  border: none;
+  border-radius: 7px;
+  color: #a0a0b8;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.correctit-tb-btn:hover {
+  background: rgba(108, 99, 255, 0.15);
+  color: #6C63FF;
+}
+
+.correctit-main-btn {
+  color: #6C63FF;
+  font-weight: 600;
+}
+
+.correctit-divider {
+  width: 1px;
+  height: 18px;
+  background: #33334d;
+  margin: 0 2px;
+}
+
+/* Result Popup */
+.correctit-popup {
+  position: absolute;
+  z-index: 2147483647;
+  min-width: 200px;
+  max-width: 420px;
+  background: #1a1a2e;
+  border: 1px solid #33334d;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(108, 99, 255, 0.1);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  animation: correctit-fade-in 0.15s ease;
+}
+
+.correctit-popup-content {
+  padding: 12px 14px;
+}
+
+.correctit-loading .correctit-popup-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #a0a0b8;
+  font-size: 13px;
+}
+
+.correctit-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(108, 99, 255, 0.25);
+  border-top-color: #6C63FF;
+  border-radius: 50%;
+  animation: correctit-spin 0.6s linear infinite;
+}
+
+@keyframes correctit-spin {
+  to { transform: rotate(360deg); }
+}
+
+.correctit-result-text {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #e8e8f0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 8px;
+}
+
+.correctit-popup-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px solid #33334d;
+}
+
+.correctit-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  background: rgba(108, 99, 255, 0.1);
+  border: 1px solid rgba(108, 99, 255, 0.2);
+  border-radius: 7px;
+  color: #a0a0b8;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.correctit-action-btn:hover {
+  background: rgba(108, 99, 255, 0.2);
+  color: #6C63FF;
+  border-color: rgba(108, 99, 255, 0.35);
+}
+
+.correctit-close-btn {
+  margin-left: auto;
+  background: transparent;
+  border-color: transparent;
+}
+
+.correctit-close-btn:hover {
+  background: rgba(255, 107, 107, 0.12);
+  color: #FF6B6B;
+  border-color: transparent;
+}
+
+/* Error state */
+.correctit-error .correctit-popup-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.correctit-error-text {
+  color: #FF6B6B;
+  font-size: 12px;
+  flex: 1;
+}
+
+/* Scrollbar inside popup */
+.correctit-result-text::-webkit-scrollbar {
+  width: 4px;
+}
+
+.correctit-result-text::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.correctit-result-text::-webkit-scrollbar-thumb {
+  background: #33334d;
+  border-radius: 4px;
+}
