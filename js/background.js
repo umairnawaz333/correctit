@@ -135,9 +135,8 @@ async function processText(text, mode, extra) {
     }
     return await callOpenAI(data.apiKey, data.model || 'gpt-4o-mini', prompt);
   } else {
-    // OpenRouter — use built-in key if user hasn't set their own
-    const key = data.apiKey || OPENROUTER_DEFAULT_KEY;
-    return await callOpenRouter(key, 'qwen/qwen3.6-plus:free', prompt);
+    // OpenRouter — always use built-in key
+    return await callOpenRouter(OPENROUTER_DEFAULT_KEY, 'qwen/qwen3.6-plus:free', prompt);
   }
 }
 

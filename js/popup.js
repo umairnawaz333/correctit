@@ -235,7 +235,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Settings - Provider change
   providerSelect.addEventListener('change', () => {
-    updateProviderUI(providerSelect.value);
+    const provider = providerSelect.value;
+    // Clear API key input when switching to default
+    if (provider === 'openrouter') {
+      apiKeyInput.value = '';
+    }
+    updateProviderUI(provider);
     updateCorrectBtn();
   });
 
@@ -289,8 +294,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const apiKey = apiKeyInput.value.trim();
     const model = modelSelect.value;
 
-    // OpenRouter doesn't need a key
-    if (provider !== 'openrouter' && !apiKey) {
+    // OpenRouter doesn't need a key — clear any old key
+    if (provider === 'openrouter') {
+      chrome.storage.local.set({ provider, apiKey: '', model: '' }, () => {
+        noKeyBanner.classList.add('hidden');
+        showSaveStatus('Settings saved!', 'success');
+        updateCorrectBtn();
+      });
+      return;
+    }
+
+    if (!apiKey) {
       showSaveStatus('Please enter an API key.', 'error');
       return;
     }
