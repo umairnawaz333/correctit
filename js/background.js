@@ -137,7 +137,7 @@ async function processText(text, mode, extra) {
   } else {
     // OpenRouter — use built-in key if user hasn't set their own
     const key = data.apiKey || OPENROUTER_DEFAULT_KEY;
-    return await callOpenRouter(key, data.model || 'meta-llama/llama-3.3-70b-instruct:free', prompt);
+    return await callOpenRouter(key, 'qwen/qwen3.6-plus:free', prompt);
   }
 }
 

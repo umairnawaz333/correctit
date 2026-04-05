@@ -37,14 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveSettingsBtn = document.getElementById('save-settings');
   const saveStatus = document.getElementById('save-status');
   const apiKeyGroup = document.getElementById('api-key-group');
+  const modelGroup = document.getElementById('model-group');
 
   let selectedMode = 'grammar';
-
-  const openrouterModels = [
-    { value: 'meta-llama/llama-3.3-70b-instruct:free', label: 'Llama 3.3 70B (Best)' },
-    { value: 'qwen/qwen3-30b-a3b:free', label: 'Qwen 3 30B (Fast)' },
-    { value: 'google/gemma-3-27b-it:free', label: 'Gemma 3 27B' }
-  ];
 
   const groqModels = [
     { value: 'llama-3.3-70b-versatile', label: 'Llama 3.3 70B (Best)' },
@@ -246,8 +241,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function updateProviderUI(provider) {
     modelSelect.innerHTML = '';
-    const modelsMap = { openrouter: openrouterModels, groq: groqModels, gemini: geminiModels, openai: openaiModels };
-    const models = modelsMap[provider] || openrouterModels;
+    const modelsMap = { groq: groqModels, gemini: geminiModels, openai: openaiModels };
+    const models = modelsMap[provider] || groqModels;
     models.forEach(m => {
       const opt = document.createElement('option');
       opt.value = m.value;
@@ -255,11 +250,13 @@ document.addEventListener('DOMContentLoaded', () => {
       modelSelect.appendChild(opt);
     });
 
-    // Hide API key section for default OpenRouter (built-in key)
+    // Hide API key & model sections for default OpenRouter
     if (provider === 'openrouter') {
       apiKeyGroup.classList.add('hidden');
+      modelGroup.classList.add('hidden');
     } else {
       apiKeyGroup.classList.remove('hidden');
+      modelGroup.classList.remove('hidden');
 
       const providerInfo = {
         groq: { label: 'Groq API Key', helpText: 'Get a free key at', linkText: 'console.groq.com', url: 'https://console.groq.com/keys' },
