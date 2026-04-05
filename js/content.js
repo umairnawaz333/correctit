@@ -94,8 +94,7 @@
     toolbar = document.createElement('div');
     toolbar.className = 'correctit-toolbar';
     toolbar.innerHTML = `
-      <div class="correctit-tb-row">
-        <button class="correctit-tb-btn correctit-main-btn" data-mode="grammar" title="Fix Grammar">
+      <button class="correctit-tb-btn correctit-main-btn" data-mode="grammar" title="Fix Grammar">
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="20 6 9 17 4 12"/>
           </svg>
@@ -128,16 +127,6 @@
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
           </svg>
         </button>
-      </div>
-      <div class="correctit-tb-input-row">
-        <input type="text" class="correctit-custom-input" placeholder="Custom instruction... (optional)" maxlength="200">
-        <button class="correctit-tb-btn correctit-send-btn" title="Send custom instruction">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="22" y1="2" x2="11" y2="13"/>
-            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-          </svg>
-        </button>
-      </div>
     `;
 
     document.body.appendChild(toolbar);
@@ -156,43 +145,14 @@
     toolbar.style.top = `${top}px`;
     toolbar.style.left = `${left}px`;
 
-    const customInput = toolbar.querySelector('.correctit-custom-input');
-    const sendBtn = toolbar.querySelector('.correctit-send-btn');
-
-    // Prevent toolbar from closing when clicking inside input
-    customInput.addEventListener('mousedown', (e) => e.stopPropagation());
-    customInput.addEventListener('click', (e) => e.stopPropagation());
-
-    // Mode button click handlers — append custom input if filled
-    toolbar.querySelectorAll('.correctit-tb-btn:not(.correctit-send-btn)').forEach(btn => {
+    // Button click handlers
+    toolbar.querySelectorAll('.correctit-tb-btn').forEach(btn => {
       btn.addEventListener('mousedown', (e) => {
         e.preventDefault();
         e.stopPropagation();
         const mode = btn.dataset.mode;
-        const extra = customInput.value.trim();
-        handleCorrection(mode, extra);
+        handleCorrection(mode, '');
       });
-    });
-
-    // Send button — use custom input as the full instruction
-    sendBtn.addEventListener('mousedown', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const instruction = customInput.value.trim();
-      if (instruction) {
-        handleCorrection(instruction, '');
-      }
-    });
-
-    // Enter key in custom input sends as custom instruction
-    customInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        const instruction = customInput.value.trim();
-        if (instruction) {
-          handleCorrection(instruction, '');
-        }
-      }
     });
   }
 
